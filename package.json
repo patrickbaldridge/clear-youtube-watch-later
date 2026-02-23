@@ -1,0 +1,14 @@
+{
+  "name": "clear-youtube-watch-later",
+  "version": "1.0.0",
+  "description": "Bulk-remove all videos from your YouTube Watch Later playlist",
+  "type": "module",
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "dry-run": "bun run src/index.ts --dry-run"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.9.3"
+  }
+}
