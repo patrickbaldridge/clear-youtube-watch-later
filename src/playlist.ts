@@ -129,8 +129,18 @@ export async function fetchAllVideos(config: Config): Promise<FetchResult> {
   )?.[0]?.playlistVideoListRenderer as Record<string, unknown>;
 
   if (!playlistVideoList) {
+    // YouTube returns no playlistVideoListRenderer when the playlist is empty
+    const alerts = ytInitialData?.alerts as Array<Record<string, unknown>> | undefined;
+    const isEmptyPlaylist = alerts?.some((a) => {
+      const text = (a?.alertRenderer as Record<string, unknown>)?.text as Record<string, unknown>;
+      const runs = text?.runs as Array<Record<string, unknown>>;
+      return runs?.[0]?.text === "The playlist does not exist.";
+    });
+    if (isEmptyPlaylist) {
+      return { videos: [], innerTubeCfg };
+    }
     throw new Error(
-      "Could not find playlistVideoListRenderer — playlist may be empty or structure changed"
+      "Could not find playlistVideoListRenderer — your cookies may be expired. Refresh YT_COOKIES_RAW in .env and try again."
     );
   }
 
